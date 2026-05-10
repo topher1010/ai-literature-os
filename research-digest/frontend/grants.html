@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Funding Radar — NIH Grants</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top navigation -->
+  <header class="site-header">
+    <div class="header-bar">
+      <a href="/" class="header-brand">Research Digest</a>
+      <nav class="header-nav">
+        <a href="/grants" class="active">Grants</a>
+        <a href="/library">Saved</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="hero-subtitle">Funding Radar</h1>
+    <p class="hero-description">NIH grants relevant to your research</p>
+    <div class="hero-stats" id="meta"></div>
+  </section>
+
+  <!-- Filters -->
+  <div class="filters-wrap">
+    <div class="grants-filter-row">
+      <button class="filters-toggle" id="filters-toggle" aria-expanded="false">
+        Topics <span class="toggle-arrow">&#9662;</span>
+      </button>
+      <div class="mechanism-filter" id="mechanism-filter">
+        <span class="filter-label">Mechanism:</span>
+        <button class="filter-btn active" data-mechanism="All">All</button>
+        <button class="filter-btn" data-mechanism="R01">R01</button>
+        <button class="filter-btn" data-mechanism="R21">R21</button>
+        <button class="filter-btn" data-mechanism="P01">P01</button>
+        <button class="filter-btn" data-mechanism="K">K-awards</button>
+        <button class="filter-btn" data-mechanism="U">U-grants</button>
+      </div>
+      <div class="sort-control">
+        <label for="sort-select" class="filter-label">Sort:</label>
+        <select id="sort-select" class="sort-select">
+          <option value="awardDate">Newest first</option>
+          <option value="relevanceScore">Relevance</option>
+          <option value="amount">Funding</option>
+        </select>
+      </div>
+    </div>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <main>
+    <div id="grants" class="grants-grid"></div>
+    <div id="empty" class="empty hidden">No grants match the selected filter.</div>
+  </main>
+
+  <footer>
+    Research Digest &middot; Data from <a href="https://reporter.nih.gov" target="_blank" rel="noopener">NIH RePORTER</a>
+  </footer>
+
+  <script src="grants.js"></script>
+</body>
+</html>

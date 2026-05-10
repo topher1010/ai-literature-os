@@ -1,0 +1,23 @@
+# Local denylist for the pre-commit sanitization hook.
+#
+# Copy this file to .githooks/local-denylist and customize. The actual
+# .githooks/local-denylist is gitignored — your personal patterns never
+# enter the repo.
+#
+# Format (one pattern per line): <description>|<extended-regex>
+#
+# - Lines starting with # are comments.
+# - Blank lines are ignored.
+# - Patterns are matched against `+` lines in `git diff --cached`.
+# - Use \b for word boundaries to avoid false-positives on substrings.
+#
+# Examples (replace with your own):
+#
+# Personal email|alex@example\.com
+# Personal domain|example\.com
+# My last name|\bSmith\b
+# My full name|Alex Smith
+# Institution|\b(University of Example|UoE)\b
+# Collaborator surnames|\b(Jones|Lee|Patel)\b
+# Project-specific keywords|\b(internal-codename|secret-feature)\b
+# Old project ID we rotated|abc123xyz789

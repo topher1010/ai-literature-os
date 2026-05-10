@@ -1,0 +1,37 @@
+{
+  "_comment": "Copy this file to journals-config.json and edit for your field. The .json version is gitignored. journal_sweeps include EVERY paper from the listed journals; pubmed_searches use keyword filters and run against the same date window. keyword_tiers drive the lightweight pre-filter (full LLM scoring runs separately via score-with-claude.js).",
+
+  "pubmed_reldays": 10,
+  "pubmed_max": 100,
+
+  "journal_sweeps": [
+    { "label": "Top journal A", "journal": "\"Cell metabolism\"[journal]" },
+    { "label": "Top journal B", "journal": "\"Nature metabolism\"[journal]" }
+  ],
+
+  "pubmed_searches": [
+    {
+      "label": "Example: keyword + adjacent area",
+      "term": "(\"your-keyword\"[tiab] OR \"adjacent-keyword\"[tiab]) AND (mechanism[tiab] OR pathway[tiab])"
+    },
+    {
+      "label": "Example: exclude livestock contamination",
+      "term": "\"your-topic\"[tiab] NOT (cattle[tiab] OR bovine[tiab] OR poultry[tiab] OR aquaculture[tiab])"
+    }
+  ],
+
+  "_keyword_tier_notes": "Keywords drive the pre-filter score before LLM scoring. Prefix a keyword with '~' for word-boundary matching (use this for 2-4 letter abbreviations that would false-match — e.g. '~klb' avoids matching 'klbacterium'). Long-form phrases use simple substring includes().",
+
+  "keyword_tiers": {
+    "high": [
+      "your-primary-protein", "your-primary-method",
+      "your-core-research-area-phrase",
+      "your-target-tissue", "your-target-receptor"
+    ],
+    "medium": [
+      "obesity", "diabetes", "metabolism", "metabolic",
+      "aging", "lifespan", "longevity",
+      "your-broader-related-topic-1", "your-broader-related-topic-2"
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Digest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top navigation -->
+  <header class="site-header">
+    <div class="header-bar">
+      <a href="/" class="header-brand">Research Digest</a>
+      <nav class="header-nav">
+        <a href="/grants">Grants</a>
+        <a href="/library">Saved</a>
+        <button class="admin-login-btn" id="admin-login-btn">Login</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="hero-subtitle">Curated literature feed</h1>
+    <div class="hero-stats" id="hero-stats">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <div class="filters-wrap">
+    <button class="filters-toggle" id="filters-toggle" aria-expanded="false">
+      Filters <span class="toggle-arrow">&#9662;</span>
+    </button>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <main>
+    <div id="papers" class="papers-grid"></div>
+    <div id="empty" class="empty hidden">No papers match the selected filter.</div>
+  </main>
+
+  <footer>
+    Research Digest
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Admin Login</h3>
+      <form id="login-form">
+        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" />
+        <div class="modal-actions">
+          <button type="button" class="bar-btn secondary" id="login-cancel">Cancel</button>
+          <button type="submit" class="bar-btn primary">Login</button>
+        </div>
+        <p id="login-error" class="login-error hidden">Invalid password</p>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

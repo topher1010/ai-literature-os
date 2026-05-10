@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# Sanitization pre-commit hook for ai-literature-os.
+#
+# This hook blocks commits that contain:
+#   - API keys (Anthropic, OpenRouter, Supabase, JWT-shaped strings)
+#   - Hardcoded /home/<user>/ paths
+#   - Anything matching a personal denylist you maintain locally
+#
+# Generic patterns are baked into this file. Personal patterns (your name,
+# collaborators, institution, project IDs, internal URLs, etc.) belong in a
+# gitignored local denylist at .githooks/local-denylist — see
+# .githooks/local-denylist.example for the format.
+#
+# Install with:  git config core.hooksPath .githooks
+#
+# Bypass with:  git commit --no-verify
+# (use only when the hit is intentionally part of public-facing documentation;
+# document the false positive in the commit message)
+
+set -euo pipefail
+
+red()   { printf '\033[31m%s\033[0m\n' "$*"; }
+green() { printf '\033[32m%s\033[0m\n' "$*"; }
+yellow(){ printf '\033[33m%s\033[0m\n' "$*"; }
+
+# Files staged for commit. Exclude .githooks/ itself so the hook never
+# false-positives on its own pattern definitions.
+staged="$(git diff --cached --name-only --diff-filter=ACM \
+          | grep -v -E '^\.githooks/' || true)"
+[ -z "$staged" ] && exit 0
+
+fail=0
+
+# ── Generic patterns (committed; useful for any fork) ─────────────────────────
+# Format: <description>|<extended-regex>
+patterns=$(cat <<'EOF'
+Anthropic API key|sk-ant-[A-Za-z0-9_-]{20,}
+OpenRouter API key|sk-or-v1-[A-Za-z0-9_-]{20,}
+Supabase publishable key|sb_publishable_[A-Za-z0-9_-]{20,}
+Supabase secret key|sb_secret_[A-Za-z0-9_-]{10,}
+JWT-shaped token|eyJ[A-Za-z0-9_-]{20,}\.eyJ[A-Za-z0-9_-]{20,}
+Hardcoded /home/<user> path|/home/[a-z][a-z0-9_-]+(/|$|[[:space:]])
+EOF
+)
+
+# ── Local denylist (gitignored; personal/private patterns) ────────────────────
+LOCAL_DENYLIST="$(git rev-parse --show-toplevel)/.githooks/local-denylist"
+if [ -f "$LOCAL_DENYLIST" ]; then
+    # Strip blank lines and comment lines, append to active patterns
+    local_lines="$(grep -v -E '^\s*(#|$)' "$LOCAL_DENYLIST" || true)"
+    if [ -n "$local_lines" ]; then
+        patterns="$patterns
+$local_lines"
+    fi
+fi
+
+while IFS='|' read -r desc regex; do
+    [ -z "$desc" ] && continue
+    hits=$(git diff --cached -U0 -- $staged 2>/dev/null \
+           | grep -E '^\+' \
+           | grep -E -- "$regex" \
+           || true)
+    if [ -n "$hits" ]; then
+        red "✗ Sanitization hit: $desc"
+        echo "$hits" | head -5 | sed 's/^/    /'
+        echo
+        fail=1
+    fi
+done <<< "$patterns"
+
+if [ "$fail" -ne 0 ]; then
+    red "Commit blocked by sanitization hook."
+    yellow "If a hit is a false positive in legitimate documentation about the system,"
+    yellow "you can bypass with: git commit --no-verify (and document the FP in the message)."
+    exit 1
+fi
+
+green "✓ Sanitization checks passed."
+exit 0

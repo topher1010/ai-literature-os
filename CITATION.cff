@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+title: "ai-literature-os: a reference implementation of an AI-augmented scientific literature operating system"
+message: "If you find this useful and want to cite it, please use the metadata below."
+type: software
+authors:
+  - family-names: Morrison
+    given-names: Christopher
+abstract: >
+  A reference implementation of an AI-augmented scientific literature workflow.
+  Coordinates QMD (vector + keyword search), PaperQA2 (passage-grounded synthesis),
+  Docling (PDF conversion), Claude Code (agentic skills), and OpenRouter
+  (embeddings + scoring) into a single system. Components: a vault pipeline that
+  ingests, enriches, embeds, and clusters a personal markdown evidence vault; an
+  optional research digest that polls PubMed, bioRxiv, and NIH Reporter and scores
+  results against a researcher profile; Claude Code skills for fast search, deep
+  synthesis, and paper intake; and a librarian agent that audits pipeline health.
+  Shared as a reference implementation, not a maintained product.
+repository-code: "https://github.com/topher1010/ai-literature-os"
+url: "https://github.com/topher1010/ai-literature-os"
+license: MIT
+version: "0.1.0"
+keywords:
+  - scientific-literature
+  - knowledge-management
+  - retrieval-augmented-generation
+  - large-language-models
+  - obsidian
+  - paperqa
+  - claude
+  - openrouter
+  - reference-implementation
+  - research-workflow

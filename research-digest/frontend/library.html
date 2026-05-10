@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Papers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top navigation -->
+  <header class="site-header">
+    <div class="header-bar">
+      <a href="/" class="header-brand">Research Digest</a>
+      <nav class="header-nav">
+        <a href="/grants">Grants</a>
+        <a href="/library" class="active">Saved</a>
+        <button class="admin-login-btn" id="admin-login-btn">Login</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="hero-subtitle">Saved Papers</h1>
+    <p class="hero-description">Papers saved from the digest, waiting to be vaulted or summarized.</p>
+    <div class="hero-stats">
+      <span class="stat-chip" id="queue-count">—</span>
+      <span class="stat-chip" id="meta">Loading…</span>
+    </div>
+    <div class="queue-controls">
+      <label>
+        <input type="checkbox" id="show-all-toggle">
+        Show all (including vaulted &amp; done)
+      </label>
+    </div>
+  </section>
+
+  <main>
+    <div class="queue-papers" id="papers">
+      <div class="empty-state" id="loading">Loading saved papers…</div>
+    </div>
+  </main>
+
+  <!-- Login modal -->
+  <div class="modal hidden" id="login-modal">
+    <div class="modal-content">
+      <h3>Admin Login</h3>
+      <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+      <div class="modal-actions">
+        <button id="login-cancel" class="bar-btn secondary">Cancel</button>
+        <button id="login-submit" class="bar-btn primary">Login</button>
+      </div>
+      <p id="login-error" class="login-error hidden"></p>
+    </div>
+  </div>
+
+  <footer>
+    Research Digest
+  </footer>
+
+  <script src="/lib/sanitize.js"></script>
+  <script src="library.js"></script>
+</body>
+</html>

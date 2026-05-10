@@ -1,0 +1,61 @@
+# Environment
+.env
+.env.local
+*.env
+
+# Vault content (this repo is tooling, not papers)
+vault/
+science-vault/
+*.pdf
+
+# Generated artifacts
+science-nav/
+science-nav/_*.md
+science-nav/_*.json
+*.pkl
+paperqa-index/
+docs.pkl
+
+# Caches and embeddings
+*-cache.json
+embeddings/profile.json
+embeddings/abstracts-cache.json
+data/seen-*.json
+data/seed-*.json
+
+# Logs
+*.log
+/tmp/*.log
+
+# Filled-in identity file (template ships; personalized version stays local)
+**/scientific-identity.md
+!**/scientific-identity-template.md
+
+# Research digest configs and prompts (per-user; templates are .example.* and ARE tracked)
+research-digest/pipeline/config/journals-config.json
+research-digest/pipeline/config/grants-config.json
+research-digest/pipeline/prompts/*.txt
+!research-digest/pipeline/prompts/*.example.txt
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Node
+node_modules/
+package-lock.json
+runs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Pre-commit hook personal denylist (see .githooks/local-denylist.example)
+.githooks/local-denylist

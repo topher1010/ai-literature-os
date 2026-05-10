@@ -1,0 +1,28 @@
+{
+  "_comment": "Copy this file to grants-config.json and edit for your field. Search queries hit NIH Reporter; the API only supports AND/OR across all space-separated terms (no inline boolean), so split compound concepts into separate searches. Keyword tiers feed the lightweight pre-filter; full LLM scoring runs separately.",
+
+  "searches": [
+    { "label": "Your primary protein/topic",
+      "text": "your-protein", "operator": "and" },
+    { "label": "Your primary method",
+      "text": "\"your-method\"", "operator": "and" },
+    { "label": "Adjacent area 1",
+      "text": "\"adjacent area\" mechanism", "operator": "and" },
+    { "label": "Adjacent area 2",
+      "text": "\"adjacent area 2\"", "operator": "and" }
+  ],
+
+  "keyword_tiers": {
+    "high": [
+      "your-primary-protein",
+      "your-primary-method",
+      "your-target-tissue",
+      "your-core-research-area-phrase"
+    ],
+    "medium": [
+      "obesity", "diabetes", "metabolism", "metabolic",
+      "aging", "lifespan", "longevity",
+      "your-broader-related-topic"
+    ]
+  }
+}

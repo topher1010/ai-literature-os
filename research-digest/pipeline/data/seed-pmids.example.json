@@ -1,0 +1,25 @@
+{
+  "_comment": "Copy to seed-pmids.json and replace with PMIDs from your own field. The pipeline averages embedding vectors of these papers to build a research profile that drives scoring. 30-100 PMIDs per bucket is plenty.",
+
+  "_buckets": {
+    "core":     "Papers central to your research — the work you build on most directly.",
+    "methods":  "Papers that exemplify the methods, models, or tools you use or want to track.",
+    "adjacent": "Papers in adjacent fields you actively follow but don't work in directly."
+  },
+
+  "core": [
+    "29363671",
+    "29155422",
+    "26196891"
+  ],
+
+  "methods": [
+    "26468288",
+    "30923826"
+  ],
+
+  "adjacent": [
+    "32792574",
+    "33184273"
+  ]
+}

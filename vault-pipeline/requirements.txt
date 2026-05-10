@@ -1,0 +1,37 @@
+# Python dependencies for ai-literature-os vault pipeline.
+#
+# Install into a venv:
+#   python3 -m venv ~/.venvs/ai-literature-os
+#   source ~/.venvs/ai-literature-os/bin/activate
+#   pip install -r requirements.txt
+#
+# Pinned to versions known to work as of 2026-04. PaperQA2 in particular
+# moves quickly — pin or expect to chase API changes.
+
+# Core science pipeline
+paper-qa>=5.10,<6
+docling>=2.0,<3
+litellm>=1.40
+
+# LLM clients
+anthropic>=0.40
+openai>=1.50
+
+# Document parsing & metadata
+pyyaml>=6
+python-dateutil>=2.8
+requests>=2.31
+
+# PubMed / NCBI
+biopython>=1.83
+
+# Numerical (used by relate-papers.sh, cluster-vault-graph.py)
+numpy>=1.26,<3
+scipy>=1.11
+
+# Graph clustering (Leiden)
+python-igraph>=0.11
+leidenalg>=0.10
+
+# Optional: Supabase sync (only needed if you wire up the digest curation flow)
+supabase>=2.0

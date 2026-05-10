@@ -1,0 +1,8 @@
+{
+  "name": "ai-literature-os-digest-pipeline",
+  "private": true,
+  "description": "Weekly literature digest pipeline. Polls PubMed/bioRxiv/NIH Reporter, scores via Claude, writes to Supabase. Cron job; not deployed.",
+  "scripts": {
+    "test": "node --test scripts/*.test.js"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/grants", "destination": "/grants.html" },
+    { "source": "/library", "destination": "/library.html" }
+  ]
+}

@@ -1,0 +1,64 @@
+# ai-literature-os — example crontab
+#
+# Edit your crontab with `crontab -e` and uncomment the lines you want.
+# Substitute $REPO with your actual clone path (e.g. ~/Projects/ai-literature-os)
+# and $HOME with your actual home dir if cron resolves it differently on your
+# system.
+#
+# CRITICAL ORDERING (Pipeline Contract item 5): if you have other QMD
+# collections (e.g. an Obsidian vault on top of the science vault), the
+# other-collection re-embed cron MUST run AFTER the science-vault re-embed.
+# `qmd embed --collection` is silently ignored upstream
+# (https://github.com/tobi/qmd/issues/558). Cron ordering is the only safety net.
+#
+# All times below assume your local timezone (whatever `date` reports).
+# Adjust as needed.
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Vault pipeline — nightly sync
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Convert new sources, deduplicate, enrich, integrate, re-embed, relate,
+# cluster, re-index. Idempotent; safe to run nightly even if nothing changed.
+# Logs: $LOG_DIR/sync-vault.log (defaults to /tmp/sync-vault.log)
+# 0 0 * * * $REPO/vault-pipeline/scripts/sync-vault.sh >> $HOME/.cache/sync-vault.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (Optional) Other-collection re-embed — MUST run AFTER the vault sync
+# ─────────────────────────────────────────────────────────────────────────────
+# Uncomment and customize if you have a second QMD collection (e.g. a personal
+# Obsidian vault). It runs at 1 AM, after the midnight vault sync.
+# 0 1 * * * cd /path/to/your/other/collection && qmd update && qmd embed --collection brain >> $HOME/.cache/other-embed.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Vault librarian — Tue/Fri 4 AM health check
+# ─────────────────────────────────────────────────────────────────────────────
+# Writes a health report to your vault for review. The agent definition lives
+# in claude-code-agents/vault-librarian.md and runs via `claude -p` with a
+# small prompt. See agent file for the report path it expects.
+# 0 4 * * 2,5 $CLAUDE_BIN -p "run the vault-librarian agent" --output-format text >> $HOME/.cache/vault-librarian.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (Optional) Research digest — Sunday 4 AM
+# ─────────────────────────────────────────────────────────────────────────────
+# Polls PubMed + bioRxiv + NIH Reporter, scores against your researcher
+# profile, writes to Supabase. Skip this whole block if you're not using
+# the research digest.
+# 0 4 * * 0 cd $REPO/research-digest/pipeline && node scripts/poll-journals.js --commit --score >> $HOME/.cache/digest-papers.log 2>&1
+# 5 4 * * 0 cd $REPO/research-digest/pipeline && node scripts/poll-grants.js   --commit --score >> $HOME/.cache/digest-grants.log 2>&1
+# 30 4 * * 0 cd $REPO/research-digest/pipeline && node scripts/score-with-claude.js papers      >> $HOME/.cache/digest-score-papers.log 2>&1
+# 45 4 * * 0 cd $REPO/research-digest/pipeline && node scripts/score-with-claude.js grants      >> $HOME/.cache/digest-score-grants.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Notes on cron and the Claude CLI
+# ─────────────────────────────────────────────────────────────────────────────
+# - Cron has a minimal PATH and no shell rc files. Set PATH at the top of the
+#   crontab (above) and use absolute paths to binaries via env vars in .env
+#   ($CLAUDE_BIN, $REPO).
+# - Source $HOME/.config/ai-literature-os.env at the start of any wrapper
+#   script, OR set the env vars directly in the crontab above.
+# - If you use nvm-managed Node, set $CLAUDE_BIN to the absolute path of the
+#   `claude` binary inside the relevant nvm version directory.

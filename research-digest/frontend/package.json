@@ -1,0 +1,8 @@
+{
+  "name": "ai-literature-os-digest-frontend",
+  "private": true,
+  "description": "Static frontend + Vercel API routes for the research digest. No build step.",
+  "scripts": {
+    "test": "node --test api/_lib/*.test.js lib/*.test.js"
+  }
+}
