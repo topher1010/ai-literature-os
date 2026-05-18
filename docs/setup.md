@@ -173,13 +173,85 @@ Edit your crontab (`crontab -e`) and uncomment what you want. **Critical:** if y
 
 ## Step 8 — Optional: Claude Code skills + librarian agent
 
-If you use [Claude Code](https://docs.claude.com/en/docs/claude-code), the three skills and the vault-librarian agent give you `/science-search`, `/deep-synthesis`, `/add-papers`, plus a Tue/Fri health-check agent. Install:
+If you use [Claude Code](https://docs.claude.com/en/docs/claude-code), the five skills and the vault-librarian agent give you `/science-search`, `/deep-synthesis`, `/add-papers`, `/critique`, and (optionally) `/consensus-check`, plus a Tue/Fri health-check agent. Install:
 
 ```bash
 mkdir -p ~/.claude/skills ~/.claude/agents
 cp -r claude-code-skills/* ~/.claude/skills/
 cp claude-code-agents/vault-librarian.md ~/.claude/agents/
 ```
+
+`/critique` is read-only and free to use immediately. `/consensus-check` needs the additional setup in Step 8b below; without it the skill is installed but will fail on first call.
+
+## Step 8b — Optional: Consensus.app integration (for `/consensus-check`)
+
+`/consensus-check` queries [Consensus.app](https://consensus.app)'s aggregate of 200M+ peer-reviewed papers via their MCP server. Useful for claim-defensibility checking during grant prose drafting — verifying a sentence like "the literature broadly supports X" against the field aggregate, not just your curated vault. Skip this step if you don't want the third-party dependency; `/critique` and the other four skills work fine without it.
+
+### Cost and tiers
+
+- **No-account tier**: unlimited searches, 3 results per search, no PMIDs/DOIs in response. Works without any setup but gives degraded output.
+- **Free tier** (sign up at https://consensus.app/sign-up): 30 MCP searches/month, 10 results per search, full abstracts.
+- **Pro tier** (paid): 1,000 MCP searches/month, 20 results per search, study type filters, "takeaways."
+
+The shipped skill defaults to free-tier limits (30/month, warn at 24). Pro users should edit the quota state file after first use (see below).
+
+### Register the MCP server
+
+```bash
+claude mcp add --transport http consensus https://mcp.consensus.app/mcp
+```
+
+Verify:
+
+```bash
+claude mcp list   # should show: consensus: https://mcp.consensus.app/mcp - ✓ Connected
+```
+
+### Authenticate (OAuth)
+
+On first `mcp__consensus__search` call, Claude Code will open the OAuth flow. The token persists in `~/.claude/.credentials.json` and auto-refreshes. **Critical caveat**: Consensus uses OAuth 2.1 with a localhost callback — there is no device-code grant — so OAuth from a pure SSH session to a headless server is non-trivial.
+
+Two paths that work:
+
+1. **VS Code Remote-SSH** (easiest if you already use it): when Claude Code triggers the OAuth flow, VS Code's `browser.sh` helper routes the auth URL to your local machine's browser via `code --openExternal`, and Remote-SSH auto-forwards the OAuth callback port. No `ssh -L` needed.
+2. **Manual SSH port forwarding**: re-connect with `ssh -L PORT:localhost:PORT user@host` where `PORT` is the localhost port Claude Code uses for OAuth callbacks (visible in the auth URL's `redirect_uri` parameter on the first attempt). Open the auth URL on your laptop's browser; the callback tunnels back through SSH.
+
+If neither is practical, you can run the skill at the no-account tier (3 results/search, no PMIDs) without ever authenticating. The skill detects "showing top 3" responses as the tell that auth is missing.
+
+### Quota state file
+
+After first invocation the skill creates `${CLAUDE_STATE_DIR:-~/.claude/state}/consensus-quota.json`:
+
+```json
+{
+  "month": "YYYY-MM",
+  "count": 0,
+  "limit": 30,
+  "warn_at": 24,
+  "tier": "free-mcp"
+}
+```
+
+If you're on Pro, edit `limit` to `1000`, `warn_at` to `800`, `tier` to `"pro"`. The file is hand-editable and the skill respects the values on every call. Monthly reset is automatic (the skill checks `month` against the current YYYY-MM on every invocation).
+
+### Allowlist (if you use `settings.json` permissions)
+
+Add `mcp__consensus__search` to your project's allowlist:
+
+```bash
+# In .claude/settings.json under "permissions.allow":
+"mcp__consensus__search"
+```
+
+### Verify
+
+In a Claude Code session, type:
+
+```
+/consensus-check [pick a specific testable claim from your area]
+```
+
+You should get a structured verdict with supporting/contradicting papers. If you see "showing top 3" instead of 10, OAuth did not complete — return to the authenticate step.
 
 ## Step 9 — Scientific identity (any agent)
 
